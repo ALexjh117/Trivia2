@@ -1,47 +1,32 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Moderador from "./components/Moderador";
+import JugadorVista from "./components/JugadorVista";
 
-// Páginas
-import Inicio from "./pages/Inicio";
-import PantallaPrincipal from "./pages/PantallaPrincipal";
+const Home: React.FC = () => (
+  <div style={{ padding: 20 }}>
+    <h1>Trivia Multijugador</h1>
+    <nav>
+      <Link to="/moderador">
+        <button>Moderador</button>
+      </Link>
+      <Link to="/jugador">
+        <button>Jugador</button>
+      </Link>
+    </nav>
+  </div>
+);
 
-// Flujo Jugador
-import Jugador from "./pages/Jugador";
-import Reglas from "./pages/Reglas";
-import Pregunta from "./pages/Pregunta";
-import Puntaje from "./pages/Puntaje";
-
-// Flujo Moderador
-import Marcador from "./pages/Marcador";
-import CrearSala from "./pages/CrearSala";
-import CrearPregunta from "./pages/CrearPregunta";
-import UnirseSala from "./pages/UnirseSala";
-
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* Pantalla inicial */}
-        <Route path="/" element={<Inicio />} />
-
-        {/* Menú principal */}
-        <Route path="/pantalla-principal" element={<PantallaPrincipal />} />
-
-        {/* === FLUJO JUGADOR === */}
-        <Route path="/jugador" element={<Jugador />} />
-        <Route path="/puntaje" element={<Puntaje />} />
-        <Route path="/unirsesala" element={<UnirseSala />} />
-        <Route path="/reglas" element={<Reglas />} />
-        <Route path="/pregunta" element={<Pregunta />} />
-
-        {/* === FLUJO MODERADOR === */}
-
-        <Route path="/crearsala" element={<CrearSala />} />
-        <Route path="/crearpregunta" element={<CrearPregunta />} />
-
-        <Route path="/marcador" element={<Marcador />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/moderador" element={<Moderador />} />
+        <Route path="/jugador" element={<JugadorVista />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;
