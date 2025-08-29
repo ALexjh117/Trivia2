@@ -3,6 +3,7 @@ import socket from "../services/socket";
 import ListaJugadores from "./ListaJugadores";
 import Pregunta from "./Pregunta";
 import type { Jugador as JugadorType, Pregunta as PreguntaType } from "../types";
+import "../styles/Moderador.css";
 
 const Moderador: React.FC = () => {
   const [codigo, setCodigo] = useState("");
@@ -84,64 +85,80 @@ const Moderador: React.FC = () => {
 
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Moderador</h2>
-      <p>Código de sala: <strong>{codigo || "Generando..."}</strong></p>
-      <button onClick={crearSala}>Crear Sala</button>
+    <div className="moderador-container">
+  <div className="moderador-card">
+    <h2>Moderador</h2>
+    <p>Código de sala: <strong>{codigo || "Generando..."}</strong></p>
+    <button onClick={crearSala}>Crear Sala</button>
 
-      <ListaJugadores jugadores={jugadores} />
+    <h3>Jugadores conectados</h3>
+    <ul>
+      {jugadores.map(j => <li key={j.nickname}>{j.nickname}</li>)}
+    </ul>
 
+    <h3>Lanzar Pregunta</h3>
+    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+      <input
+        placeholder="Texto pregunta"
+        value={textoPregunta}
+        onChange={(e) => setTextoPregunta(e.target.value)}
+      />
+      {opciones.map((o, i) => (
+        <input
+          key={i}
+          placeholder={`Opción ${i + 1}`}
+          value={o}
+          onChange={(e) => {
+            const newOpts = [...opciones];
+            newOpts[i] = e.target.value;
+            setOpciones(newOpts);
+          }}
+        />
+      ))}
+      <input
+        placeholder="Respuesta correcta"
+        value={correcta}
+        onChange={(e) => setCorrecta(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Tiempo (s)"
+        value={tiempo}
+        onChange={(e) => setTiempo(Number(e.target.value))}
+      />
+    </div>
+    <div>
+      <button onClick={startQuestion}>Iniciar Pregunta</button>
+      <button className="finalizar" onClick={endGame}>Finalizar Juego</button>
+    </div>
+
+    {preguntaActiva && (
       <div style={{ marginTop: 20 }}>
-        <h3>Lanzar Pregunta</h3>
-        <input placeholder="Texto pregunta" value={textoPregunta} onChange={(e) => setTextoPregunta(e.target.value)} />
-        {opciones.map((o, i) => (
-          <input
-            key={i}
-            placeholder={`Opción ${i + 1}`}
-            value={o}
-            onChange={(e) => {
-              const newOpts = [...opciones];
-              newOpts[i] = e.target.value;
-              setOpciones(newOpts);
-            }}
-          />
-        ))}
-        <input placeholder="Respuesta correcta" value={correcta} onChange={(e) => setCorrecta(e.target.value)} />
-        <input type="number" placeholder="Tiempo (s)" value={tiempo} onChange={(e) => setTiempo(Number(e.target.value))} />
-        <button onClick={startQuestion}>Iniciar Pregunta</button>
-        <button onClick={endGame} style={{ marginLeft: 10, backgroundColor: "red", color: "white" }}>Finalizar Juego</button>
+        <h3>Pregunta activa: {preguntaActiva.texto}</h3>
+        <p>Tiempo restante: {contador}s</p>
+        <Pregunta pregunta={preguntaActiva} />
       </div>
-
-      {preguntaActiva && (
-        <div style={{ marginTop: 20 }}>
-          <h3>Pregunta activa: {preguntaActiva.texto}</h3>
-          <p>Tiempo restante: {contador}s</p>
-          <Pregunta pregunta={preguntaActiva} />
-        </div>
-      )}
+    )}
 
     {puntajesFinales && puntajesFinales.length > 0 && (
-  <div style={{ marginTop: 20 }}>
-    {(() => {
-      const maxPuntos = Math.max(...puntajesFinales.map(j => j.puntos));
-      const ganadores = puntajesFinales.filter(j => j.puntos === maxPuntos);
-      const textoGanador = ganadores.map(g => g.nickname).join(", ");
-      return <h3>¡Ganador{ganadores.length > 1 ? "es" : ""}: {textoGanador}!</h3>;
-    })()}
-    
-    <h3>Puntajes finales</h3>
-    <ul>
-      {puntajesFinales.map((j) => (
-        <li key={j.nickname}>{j.nickname}: {j.puntos} puntos</li>
-      ))}
-    </ul>
+      <div style={{ marginTop: 20 }}>
+        {(() => {
+          const maxPuntos = Math.max(...puntajesFinales.map(j => j.puntos));
+          const ganadores = puntajesFinales.filter(j => j.puntos === maxPuntos);
+          const textoGanador = ganadores.map(g => g.nickname).join(", ");
+          return <h3>¡Ganador{ganadores.length > 1 ? "es" : ""}: {textoGanador}!</h3>;
+        })()}
+        <h3>Puntajes finales</h3>
+        <ul>
+          {puntajesFinales.map((j) => (
+            <li key={j.nickname}>{j.nickname}: {j.puntos} puntos</li>
+          ))}
+        </ul>
+      </div>
+    )}
   </div>
+</div>
+
 )}
-
-
-
-    </div>
-  );
-};
 
 export default Moderador;

@@ -1,0 +1,96 @@
+/* Fondo */
+.moderador-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-image: url("../assets/fondo2.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card principal */
+.moderador-card {
+  background: rgba(223, 200, 200, 0.6);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 300px;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Títulos */
+.moderador-card h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+.moderador-card h3 {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #fffffe;
+}
+
+/* Inputs */
+.moderador-card input {
+  width: calc(50% - 10px);
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Botones */
+.moderador-card button {
+  background: #0d6efd;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  margin: 8px 5px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-transform: uppercase;
+}
+
+.moderador-card button:hover {
+  background: #228b22;
+  transform: scale(1.05);
+}
+
+.moderador-card button:active {
+  transform: scale(0.95);
+}
+
+/* Botón rojo */
+.moderador-card button.finalizar {
+  background: #e74c3c;
+}
+
+.moderador-card button.finalizar:hover {
+  background: #c0392b;
+}
+
+/* Lista de jugadores */
+.moderador-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.moderador-card li {
+  background: rgba(255, 255, 255, 0.1);
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 6px;
+}
