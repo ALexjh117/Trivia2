@@ -1,0 +1,62 @@
+.home-container  {
+  position: relative;
+  width: 100vw;
+  height: 100vh; /* toda la pantalla */
+  overflow: hidden;
+  background-image: url("../assets/fondo2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.home-title {
+  text-align: center;
+  padding-top: 30px; /* espacio desde arriba */
+}
+
+.home-title h1 {
+  font-size: 32px;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px #000; 
+}
+
+.home-buttons {
+  flex: 1; /* ocupa todo el espacio disponible */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centra vertical */
+  align-items: center;     /* centra horizontal */
+  gap: 20px;
+}
+
+.home-buttons button {
+  background-color: #1f66cf;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Press Start 2P', cursive;
+  border-radius: 8px;
+  width: 220px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  transition: transform 0.2s, background-color 0.2s;
+  text-align: center;
+}
+
+.home-buttons button:hover {
+  background-color: #228b22;
+  transform: scale(1.05);
+}
+
+.home-buttons a {
+  text-decoration: none;
+}

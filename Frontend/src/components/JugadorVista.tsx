@@ -3,6 +3,7 @@ import socket from "../services/socket";
 import ListaJugadores from "./ListaJugadores";
 import Pregunta from "./Pregunta";
 import type { Jugador as JugadorType, Pregunta as PreguntaType } from "../types";
+import "../styles/Jugador.css";
 
 const JugadorVista: React.FC = () => {
   const [codigo, setCodigo] = useState("");
@@ -30,13 +31,11 @@ const JugadorVista: React.FC = () => {
     setFeedback(isCorrect ? "✅ Correcto!" : "❌ Incorrecto!");
     if (isCorrect) setPuntos((prev) => prev + 10);
 
-  
-  socket.emit("answer", { codigoSala: codigo, respuesta: resp }, (res: { error?: string; correcta?: boolean }) => {
+    socket.emit("answer", { codigoSala: codigo, respuesta: resp }, (res: { error?: string; correcta?: boolean }) => {
       if (res.error) alert(res.error);
     });
   };
 
-  // Temporizador
   useEffect(() => {
     if (!pregunta) return;
     setContador(pregunta.tiempo);
@@ -57,7 +56,6 @@ const JugadorVista: React.FC = () => {
     setTimeout(tick, 1000);
   }, [pregunta]);
 
-  // Socket listeners
   useEffect(() => {
     socket.on("updatePlayers", (players: JugadorType[]) => setJugadores(players));
     socket.on("newQuestion", (q: PreguntaType) => setPregunta(q));
@@ -77,34 +75,38 @@ const JugadorVista: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Jugador</h2>
-      <p>Puntos: {puntos}</p>
-      <input placeholder="Código sala" value={codigo} onChange={(e) => setCodigo(e.target.value)} />
-      <input placeholder="Nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
-      <button onClick={joinRoom}>Unirse</button>
+    <div className="jugador-container">
+      <div className="jugador-card">
+        <h2>Jugador</h2>
+        <p>Puntos: {puntos}</p>
+        <input placeholder="Código sala" value={codigo} onChange={(e) => setCodigo(e.target.value)} />
+        <input placeholder="Nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+        <button onClick={joinRoom}>Unirse</button>
 
-      <ListaJugadores jugadores={jugadores} />
-
-      {pregunta && (
-        <div style={{ marginTop: 20 }}>
-          <h3>{pregunta.texto}</h3>
-          <p>Tiempo restante: {contador}s</p>
-          <Pregunta pregunta={pregunta} responder={answer} disabled={respondido || contador === 0} />
-          {feedback && <p style={{ fontWeight: "bold", marginTop: 10 }}>{feedback}</p>}
+        <div className="lista-jugadores">
+          <ListaJugadores jugadores={jugadores} />
         </div>
-      )}
 
-      {puntajesFinales && (
-        <div style={{ marginTop: 20 }}>
-          <h3>Puntajes finales</h3>
-          <ul>
-            {puntajesFinales.map((j) => (
-              <li key={j.nickname}>{j.nickname}: {j.puntos} puntos</li>
-            ))}
-          </ul>
-        </div>
-      )}
+        {pregunta && (
+          <div className="pregunta-container">
+            <h3>{pregunta.texto}</h3>
+            <p>Tiempo restante: {contador}s</p>
+            <Pregunta pregunta={pregunta} responder={answer} disabled={respondido || contador === 0} />
+            {feedback && <p className="feedback">{feedback}</p>}
+          </div>
+        )}
+
+        {puntajesFinales && (
+          <div className="final-scores">
+            <h3>Puntajes finales</h3>
+            <ul>
+              {puntajesFinales.map((j) => (
+                <li key={j.nickname}>{j.nickname}: {j.puntos} puntos</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
