@@ -17,8 +17,8 @@
   background: rgba(223, 200, 200, 0.6);
   border-radius: 12px;
   padding: 30px;
-  max-width: 300px;
-  width: 90%;
+  max-width: 100vh;
+  width: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -29,13 +29,14 @@
 .moderador-card h2 {
   font-size: 22px;
   margin-bottom: 15px;
+  
   color: #ffffff;
 }
 
 .moderador-card h3 {
   margin-top: 20px;
   font-size: 16px;
-  color: #fffffe;
+  color: #111110;
 }
 
 /* Inputs */
@@ -53,9 +54,10 @@
 .moderador-card button {
   background: #0d6efd;
   border: none;
+  width: 400px;
   padding: 12px 20px;
   border-radius: 8px;
-  color: #fff;
+  color: #080808;
   font-size: 14px;
   margin: 8px 5px;
   cursor: pointer;

@@ -60,3 +60,27 @@
 .home-buttons a {
   text-decoration: none;
 }
+.img-mario {
+  position: absolute;
+  left: 250px;
+  top: 573px;
+  width: 200px; 
+  animation: moverArribaAbajo 2s ease-in-out infinite alternate;
+}
+
+@keyframes moverArribaAbajo {
+  0% {
+    top: 573px; 
+  }
+  50% {
+    top: 523px; 
+  }
+  100% {
+    top: 573px; 
+  }
+}
+
+
+.titulo-trivia {
+  margin-top: 300px;
+}

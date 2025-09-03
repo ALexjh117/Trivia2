@@ -14,7 +14,6 @@ const JugadorVista: React.FC = () => {
   const [feedback, setFeedback] = useState<string>("");
   const [respondido, setRespondido] = useState(false);
   const [puntos, setPuntos] = useState<number>(0);
-  const [puntajesFinales, setPuntajesFinales] = useState<{ nickname: string; puntos: number }[] | null>(null);
 
   const joinRoom = () => {
     socket.emit("joinRoom", { codigoSala: codigo, nickname }, (res: { error?: string; jugadores?: JugadorType[] }) => {
@@ -31,29 +30,36 @@ const JugadorVista: React.FC = () => {
     setFeedback(isCorrect ? "✅ Correcto!" : "❌ Incorrecto!");
     if (isCorrect) setPuntos((prev) => prev + 10);
 
-    socket.emit("answer", { codigoSala: codigo, respuesta: resp }, (res: { error?: string; correcta?: boolean }) => {
+    socket.emit("answer", { codigoSala: codigo, respuesta: resp }, (res: { error?: string }) => {
       if (res.error) alert(res.error);
     });
   };
 
+  // Contador corregido usando Date.now()
   useEffect(() => {
     if (!pregunta) return;
+
     setContador(pregunta.tiempo);
     setRespondido(false);
     setFeedback("");
-    const tick = () => {
-      setContador((prev) => {
-        if (prev <= 1) {
-          setPregunta(null);
-          setRespondido(false);
-          setFeedback("");
-          return 0;
-        }
-        setTimeout(tick, 1000);
-        return prev - 1;
-      });
-    };
-    setTimeout(tick, 1000);
+
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = pregunta.tiempo - elapsed;
+
+      if (remaining <= 0) {
+        setContador(0);
+        setPregunta(null);
+        setRespondido(false);
+        setFeedback("");
+        clearInterval(interval);
+      } else {
+        setContador(remaining);
+      }
+    }, 200); // cada 200ms para mayor precisión
+
+    return () => clearInterval(interval);
   }, [pregunta]);
 
   useEffect(() => {
@@ -61,16 +67,12 @@ const JugadorVista: React.FC = () => {
     socket.on("newQuestion", (q: PreguntaType) => setPregunta(q));
     socket.on("endQuestion", () => setPregunta(null));
     socket.on("roomClosed", () => alert("Sala cerrada"));
-    socket.on("gameEnded", (finalScores: { nickname: string; puntos: number }[]) => {
-      setPuntajesFinales(finalScores);
-    });
 
     return () => {
       socket.off("updatePlayers");
       socket.off("newQuestion");
       socket.off("endQuestion");
       socket.off("roomClosed");
-      socket.off("gameEnded");
     };
   }, []);
 
@@ -78,7 +80,7 @@ const JugadorVista: React.FC = () => {
     <div className="jugador-container">
       <div className="jugador-card">
         <h2>Jugador</h2>
-        <p>Puntos: {puntos}</p>
+        <p>Mi puntos: {puntos}</p>
         <input placeholder="Código sala" value={codigo} onChange={(e) => setCodigo(e.target.value)} />
         <input placeholder="Nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} />
         <button onClick={joinRoom}>Unirse</button>
@@ -86,6 +88,7 @@ const JugadorVista: React.FC = () => {
         <div className="lista-jugadores">
           <ListaJugadores jugadores={jugadores} />
         </div>
+        <img src="../img/mario.png" alt="" width={200} height={200} className="img-mario"/>
 
         {pregunta && (
           <div className="pregunta-container">
@@ -96,13 +99,16 @@ const JugadorVista: React.FC = () => {
           </div>
         )}
 
-        {puntajesFinales && (
-          <div className="final-scores">
-            <h3>Puntajes finales</h3>
+        {/* Ranking en tiempo real */}
+        {jugadores.length > 0 && (
+          <div className="ranking">
+            <h3>Ranking Actual</h3>
             <ul>
-              {puntajesFinales.map((j) => (
-                <li key={j.nickname}>{j.nickname}: {j.puntos} puntos</li>
-              ))}
+              {jugadores
+                .sort((a, b) => (b.score || 0) - (a.score || 0))
+                .map(j => (
+                  <li key={j.nickname}>{j.nickname}: {j.score || 0} pts</li>
+                ))}
             </ul>
           </div>
         )}
